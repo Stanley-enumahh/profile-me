@@ -1,28 +1,46 @@
-"use client";
-
 import { Linkedin, Twitter } from "lucide-react";
 import check1 from "@/assets/check_18295118.png";
 import { fetchProfile } from "@/fetchProfile";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
+import { supabase } from "@/supabaseClient";
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
-export default function Profile({ params }: Props) {
-  const { id } = React.use(params);
+export async function generateMetadata({ params }: Props) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("name, description, image_url, linkedin, xhandle")
+    .eq("id", params.id)
+    .single();
 
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ["profile", id],
-    queryFn: () => fetchProfile(id!),
-    enabled: !!id,
-  });
+  return {
+    title: profile?.name || "Profile",
+    description: profile?.description || "",
+    openGraph: {
+      title: profile?.name,
+      description: profile?.description,
+      images: profile?.image_url ? [profile.image_url] : [],
+    },
+  };
+}
+
+export default async function Profile({ params }: Props) {
+  const { id } = params;
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   console.log(profile);
 
-  if (isLoading) return <p>Loading...</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  if (!profile) return <p>Profile not found</p>;
 
   return (
     <div className="h-[500px] w-[360px] overflow-hidden relative shadow-lg rounded-lg border border-[#343434]">
