@@ -8,17 +8,19 @@ const LivePreview = ({
   xHandle,
   linkedIn,
   name,
+  bgColor,
 }: {
   image: string;
   description: string;
   xHandle: string;
   linkedIn: string;
   name: string;
+  bgColor: string;
 }) => {
   return (
     <div className="w-full justify-center items-center md:w-[50%] lg:w-[48%] h-fit flex gap-3 flex-col">
       <h2 className="text-lg">Live preview</h2>
-      <div className="h-[420px] md:h-[520px] w-full lg:w-[70%] overflow-hidden relative shadow-lg rounded-lg">
+      <div className="h-[420px] md:h-[550px] w-full lg:w-[95%] overflow-hidden relative shadow-lg rounded-lg">
         {image && (
           <img
             src={image}
@@ -26,7 +28,12 @@ const LivePreview = ({
             className="w-full h-full rounded-lg object-cover"
           />
         )}
-        <div className="absolute bg-gradient-to-t p-3 md:p-5 h-[210px] md:h-[250px] from-blue-900/80 bottom-0 w-full text-white md:pr-3 gap-2 flex flex-col justify-center">
+        <div
+          style={{
+            backgroundImage: `linear-gradient(to top, ${bgColor}cc, transparent)`,
+          }}
+          className="absolute bg-gradient-to-t p-3 md:p-5 h-[210px] md:h-[250px] bottom-0 w-full text-white md:pr-3 gap-3 flex flex-col justify-center"
+        >
           {name && (
             <span className="flex flex-row gap-3 items-center">
               <h1 className="font-semibold text-lg md:text-xl capitalize">
@@ -41,7 +48,9 @@ const LivePreview = ({
             </span>
           )}
           {description && (
-            <p className="capitalize text-neutral-200 text-sm">{description}</p>
+            <p className="capitalize text-neutral-200 text-sm leading-[22px]">
+              {description}
+            </p>
           )}
 
           <div className="flex flex-row gap-5 text-sm mt-2 md:mt-3">
@@ -60,7 +69,7 @@ const LivePreview = ({
             )}
           </div>
         </div>
-        {/* high profile developer with an eye for detail */}
+        {/* high profile designer with an eye for detail, i help start ups rech goals on time */}
       </div>
     </div>
   );

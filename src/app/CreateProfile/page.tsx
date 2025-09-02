@@ -1,12 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/supabaseClient";
 import { toast } from "sonner";
 import LivePreview from "@/components/preview";
+import { truncateUrl } from "@/lib/trucateUrl";
+import { Link } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 
 export type ProfileFormValues = {
   name: string;
@@ -14,7 +17,18 @@ export type ProfileFormValues = {
   xHandle: string;
   linkedIn: string;
   image: FileList;
+  bgColor: string;
 };
+
+const colors = [
+  "#05505a",
+  "#1446e6",
+  "#9333ea",
+  "#dc2626",
+  "#16a34a",
+  "#f59e0b",
+  "#111827",
+];
 
 const InputLabel = ({ htmlFor, text }: { htmlFor: string; text: string }) => {
   return (
@@ -30,7 +44,7 @@ export default function CreateProfile() {
     handleSubmit,
     watch,
     setValue,
-    // reset,
+    reset,
     formState: { errors },
   } = useForm<ProfileFormValues>();
 
@@ -47,7 +61,7 @@ export default function CreateProfile() {
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
-      }, 7000);
+      }, 5000);
     }
   };
 
@@ -71,7 +85,7 @@ export default function CreateProfile() {
     return publicUrl;
   };
 
-  const onSubmit = async (values: ProfileFormValues) => {
+  const createProfile = async (values: ProfileFormValues) => {
     let imageUrl = null;
 
     if (values.image && values.image[0]) {
@@ -87,22 +101,27 @@ export default function CreateProfile() {
           xhandle: values.xHandle,
           linkedin: values.linkedIn,
           image_url: imageUrl,
+          bg_color: values.bgColor,
         },
       ])
       .select("id");
 
-    if (error) {
-      console.error(error);
-      return;
-    }
+    if (error) throw error;
 
     const profileId = data[0].id;
-    const link = `${window.location.origin}/profile/${profileId}`;
-
-    setUrl(link);
-
-    // reset();
+    return `${window.location.origin}/profile-card/${profileId}`;
   };
+
+  const mutation = useMutation({
+    mutationFn: createProfile,
+    onSuccess: (link) => {
+      setUrl(link);
+      toast.success("Profile created!");
+    },
+    onError: () => {
+      toast.error("Something went wrong while creating profile.");
+    },
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -118,10 +137,10 @@ export default function CreateProfile() {
           Create your professional profile
         </h1>
         <div className="flex flex-col gap-14 md:flex-row justify-between w-full h-full">
-          <div className="flex flex-col w-full md:w-[50%] lg:w-[48%] h-full gap-3 px-4 py-7  rounded-xl bg-white">
+          <div className="flex flex-col w-full md:w-[50%] lg:w-[55%] h-full gap-3 px-4 py-7  rounded-xl bg-white">
             <h2 className="text-[16px] md:text-lg">Fill in the your info.</h2>
             <form
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit((values) => mutation.mutate(values))}
               className="h-fit w-full flex flex-col gap-5"
             >
               {previewImage ? (
@@ -166,7 +185,7 @@ export default function CreateProfile() {
                     maxLength: { value: 20, message: "Max 30 characters" },
                   })}
                 />
-                <p className="text-sm text-black/50 font-semibold">
+                <p className="text-xs text-black/50 font-semibold">
                   {" "}
                   {name.length}/20
                 </p>
@@ -179,16 +198,21 @@ export default function CreateProfile() {
                 <Textarea
                   id="description"
                   placeholder="Tell about yourself"
-                  maxLength={80}
-                  className="placeholder:md:text-sm placeholder:text-xs h-[80px] md:text-sm text-xs"
+                  maxLength={150}
+                  className="placeholder:md:text-sm placeholder:text-xs h-[80px] md:text-sm text-xs "
                   {...register("description", {
                     required: "Description is required",
-                    maxLength: { value: 80, message: "Max 200 characters" },
+                    maxLength: { value: 150, message: "Max 200 characters" },
                   })}
                 />
-                <p className="text-sm text-black/50 font-semibold">
-                  {description.length}/80
+                <p className="text-xs text-black/50 font-semibold">
+                  {description.length}/150
                 </p>
+                {errors.description && (
+                  <p className="text-red-500 text-xs">
+                    {errors.description.message}
+                  </p>
+                )}
               </div>
               {/* handles */}
               <div className="flex flex-col gap-2">
@@ -197,9 +221,17 @@ export default function CreateProfile() {
                 <Input
                   id="xHandle"
                   placeholder="@username"
-                  {...register("xHandle")}
+                  {...register("xHandle", {
+                    required: "Please enter X handle",
+                  })}
                   className="placeholder:md:text-sm placeholder:text-xs md:text-sm text-xs"
                 />
+
+                {errors.xHandle && (
+                  <p className="text-red-500 text-xs">
+                    {errors.xHandle.message}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <InputLabel text="linkedIn" htmlFor="LinkedIn Handle" />
@@ -207,31 +239,74 @@ export default function CreateProfile() {
                 <Input
                   id="linkedIn"
                   placeholder="linkedin.com/in/yourname"
-                  {...register("linkedIn")}
+                  {...register("linkedIn", {
+                    required: "Please enter LinkedIn",
+                  })}
                   className="placeholder:md:text-sm placeholder:text-xs md:text-sm text-xs"
                 />
+                {errors.linkedIn && (
+                  <p className="text-red-500 text-xs">
+                    {errors.linkedIn.message}
+                  </p>
+                )}
+              </div>
+              {/* coolers */}
+              <div className="flex flex-col gap-2">
+                <InputLabel text="Choose Background Color" htmlFor="bgColor" />
+                <div className="flex flex-wrap gap-4">
+                  {colors.map((color) => (
+                    <span
+                      key={color}
+                      onClick={() => setValue("bgColor", color)}
+                      className={`w-8 h-8 rounded-full cursor-pointer border-2 transition 
+                            ${
+                              watch("bgColor") === color
+                                ? " scale-120"
+                                : "border-gray-300"
+                            }
+                          `}
+                      style={{ backgroundColor: color }}
+                    ></span>
+                  ))}
+                </div>
               </div>
               {/* displayed url */}
               {url && (
-                <span className="border-2 flex justify-center border-green-700  px-4 py-2 rounded-2xl text-xs md:text-sm">
-                  <p>{url}</p>
-                </span>
+                <div className="flex flex-row justify-between items-center bg-blue-200 h-[60px] py-2 px-2 rounded-lg">
+                  <span className="border-r flex justify-between items-center px-5 h-full border-gray-400">
+                    <Link className="text-black/50" />
+                  </span>
+
+                  <p className="text-sm text-black/60">{truncateUrl(url)}</p>
+
+                  <button
+                    onClick={handleCopy}
+                    type="button"
+                    disabled={!url || copied}
+                    className="cursor-pointer disabled:bg-blue-700/50 bg-blue-700 text-xs md:text-sm h-full px-4 rounded-lg text-white hover:bg-blue-700/80 transition-all duration-200"
+                  >
+                    Copy Link
+                  </button>
+                </div>
               )}
               <span className="flex flex-row w-full justify-center items-center gap-5">
-                <button
-                  type="submit"
-                  className="mt-2 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
-                >
-                  Generate Link
-                </button>
-                <button
-                  onClick={handleCopy}
-                  type="button"
-                  disabled={!url}
-                  className="mt-2 cursor-pointer disabled:bg-blue-700/50 bg-blue-700 text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-blue-700/80 transition-all duration-200"
-                >
-                  Copy Link
-                </button>
+                {!url ? (
+                  <button
+                    disabled={mutation.isPending}
+                    type="submit"
+                    className="mt-2 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
+                  >
+                    {mutation.isPending ? "Generating..." : "Generate Link"}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => reset()}
+                    className="mt-2 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
+                  >
+                    Clear form
+                  </button>
+                )}
               </span>
             </form>
           </div>
@@ -242,6 +317,7 @@ export default function CreateProfile() {
             xHandle={xHandle}
             linkedIn={linkedIn}
             name={name}
+            bgColor={watch("bgColor") || "#1446e6"}
           />
         </div>
       </div>
