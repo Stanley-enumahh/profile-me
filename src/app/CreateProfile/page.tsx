@@ -10,6 +10,7 @@ import LivePreview from "@/components/preview";
 import { truncateUrl } from "@/lib/trucateUrl";
 import { Link } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { FileUpload } from "@/components/ui/file-upload";
 
 export type ProfileFormValues = {
   name: string;
@@ -109,7 +110,7 @@ export default function CreateProfile() {
     if (error) throw error;
 
     const profileId = data[0].id;
-    return `${window.location.origin}/profile-card/${profileId}`;
+    return `${window.location.origin}/profile/${profileId}`;
   };
 
   const mutation = useMutation({
@@ -143,31 +144,17 @@ export default function CreateProfile() {
               onSubmit={handleSubmit((values) => mutation.mutate(values))}
               className="h-fit w-full flex flex-col gap-5"
             >
-              {previewImage ? (
-                <img
-                  src={previewImage}
-                  alt="Preview"
-                  className="w-[100px] h-[100px] rounded-lg object-cover"
-                />
-              ) : (
-                <span
-                  onClick={() => fileInputRef.current?.click()}
-                  className="h-[100px] text-xs flex justify-center items-center text-center w-[100px] cursor-pointer text-white rounded-lg bg-[#05505a]"
-                >
-                  click to select profile image
-                </span>
-              )}
-              {/* Hidden File Input */}{" "}
-              <div className="flex flex-col gap-2">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  {...register("image", {
-                    required: "Image is required",
-                    onChange: handleImageChange,
-                  })}
-                  ref={fileInputRef}
+              <div className="flex flex-col gap-2 ">
+                <FileUpload
+                  onChange={(files) => {
+                    if (files.length > 0) {
+                      const file = files[0];
+                      setPreviewImage(URL.createObjectURL(file));
+                      setValue("image", files as unknown as FileList, {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
                 />
                 {errors.image && (
                   <p className="text-red-500 text-xs">{errors.image.message}</p>
@@ -216,13 +203,17 @@ export default function CreateProfile() {
               </div>
               {/* handles */}
               <div className="flex flex-col gap-2">
-                <InputLabel text="X Handle" htmlFor="xHandle" />
+                <InputLabel text="X Profile Url" htmlFor="xHandle" />
 
                 <Input
                   id="xHandle"
-                  placeholder="@username"
+                  placeholder="https://x.com/your-handle"
                   {...register("xHandle", {
                     required: "Please enter X handle",
+                    pattern: {
+                      value: /^https?:\/\/(www\.)?x\.com\/[A-Za-z0-9_]{1,15}$/,
+                      message: "Please enter a valid X profile URL",
+                    },
                   })}
                   className="placeholder:md:text-sm placeholder:text-xs md:text-sm text-xs"
                 />
@@ -238,9 +229,14 @@ export default function CreateProfile() {
 
                 <Input
                   id="linkedIn"
-                  placeholder="linkedin.com/in/yourname"
+                  placeholder="https://www.linkedin.com/in/your-name"
                   {...register("linkedIn", {
-                    required: "Please enter LinkedIn",
+                    required: "Please enter LinkedIn profile url",
+                    pattern: {
+                      value:
+                        /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+\/?$/,
+                      message: "Enter a valid LinkedIn profile URL",
+                    },
                   })}
                   className="placeholder:md:text-sm placeholder:text-xs md:text-sm text-xs"
                 />
@@ -250,7 +246,7 @@ export default function CreateProfile() {
                   </p>
                 )}
               </div>
-              {/* coolers */}
+              {/* colours */}
               <div className="flex flex-col gap-2">
                 <InputLabel text="Choose Background Color" htmlFor="bgColor" />
                 <div className="flex flex-wrap gap-4">
@@ -301,7 +297,10 @@ export default function CreateProfile() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => reset()}
+                    onClick={() => {
+                      setUrl(null);
+                      reset();
+                    }}
                     className="mt-2 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
                   >
                     Clear form

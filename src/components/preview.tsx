@@ -1,4 +1,6 @@
 import check1 from "@/assets/check_18295118.png";
+import { getLinkedInUsername } from "@/lib/getIinkedInUsername";
+import { getXUsername } from "@/lib/getXusername";
 import { Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 
@@ -57,19 +59,26 @@ const LivePreview = ({
             {xHandle && (
               <span className="flex flex-row gap-2 items-center">
                 <Twitter size={16} />
-                <p className="text-xs md:text-sm">{xHandle}</p>
+                <p className="text-xs md:text-sm">{getXUsername(xHandle)}</p>
               </span>
             )}
 
             {linkedIn && (
               <span className="flex flex-row gap-2 items-center">
                 <Linkedin size={16} />
-                <p className="text-xs md:text-sm">{linkedIn}</p>
+                <p className="text-xs md:text-sm">
+                  {getLinkedInUsername(linkedIn)}
+                </p>
               </span>
             )}
           </div>
         </div>
-        {/* high profile designer with an eye for detail, i help start ups rech goals on time */}
+        {/* high profile designer with an eye for detail, i help start ups rech goals on time 
+        
+        https://x.com/stanlee0nX
+        
+        
+        https://www.linkedin.com/in/stanley-enumah01/*/}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
     .single();
 
   return {
-    title: profile?.name || "Profile",
+    title: profile?.name || "Profile-me",
     description: profile?.description || "",
     openGraph: {
       title: profile?.name,

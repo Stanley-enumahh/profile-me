@@ -1,5 +1,11 @@
 "use client";
 
+import { Dancing_Script } from "next/font/google";
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 import { Linkedin, Twitter } from "lucide-react";
 import check1 from "@/assets/check_18295118.png";
 import Image from "next/image";
@@ -7,6 +13,9 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/supabaseClient";
 import { Skeleton } from "./ui/skeleton";
+import { getXUsername } from "@/lib/getXusername";
+import { getLinkedInUsername } from "@/lib/getIinkedInUsername";
+import { LoaderFive } from "./ui/loader";
 
 async function fetchProfile(id: string) {
   const { data, error } = await supabase
@@ -31,55 +40,90 @@ export default function ProfileClient({ id }: { id: string }) {
 
   if (isLoading)
     return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <Skeleton className="h-[450px] w-[350px] mt-[40px] md:mt-[100px] rounded-lg" />
+      <div className="h-screen w-full flex justify-center items-center gap-4 flex-col">
+        <LoaderFive text=" Loading your profile..." />;
+        <Skeleton className="h-[450px] w-[350px] rounded-lg" />
       </div>
     );
   if (error) return <p>Something went wrong</p>;
 
   return (
-    <div className="w-full h-screen flex justify-center">
-      <div className="h-[80%] md:h-[460px] w-[87%] md:w-[350px] mt-[40px] md:mt-[100px] overflow-hidden relative shadow-lg rounded-lg border border-[#343434]">
-        {profile.image_url && (
-          <img
-            src={profile.image_url}
-            alt=""
-            className="w-full h-full rounded-lg object-cover"
-          />
-        )}
-        <div
-          style={{
-            backgroundImage: `linear-gradient(to top, ${
-              profile.bg_color || "#1E40AF"
-            }99, transparent)`,
-          }}
-          className="absolute bg-gradient-to-t p-3 md:p-4 h-[240px] md:h-[200px] bottom-0 w-full text-white pr-3 gap-2 flex flex-col justify-center"
-        >
-          <span className="flex flex-row gap-3 items-center">
-            <h1 className="font-semibold text-lg capitalize">{profile.name}</h1>
-
-            <Image
-              src={check1}
+    <div className="w-full min-h-screen md:h-[700px] flex justify-center bg-gradient-to-t to-[#b061c5] from-[#41558c] items-center flex-col gap-8">
+      <p
+        className={`md:text-sm text-xs ${dancingScript.className} text-white fixed top-[40px] md:top-[50%] md:left-[180px]`}
+      >
+        Made with profile me
+      </p>
+      <div className="bg-[#ebebeb] h-[80%] shadow-xl md:h-[460px] w-[87%] p-2  md:w-[350px] mt-[40px] md:mt-[60px] overflow-hidden relative rounded-xl">
+        <div className="h-full w-full overflow-hidden relative shadow-lg rounded-xl">
+          {profile.image_url && (
+            <img
+              src={profile.image_url}
               alt=""
-              className="w-[25px] h-[25px] object-cover"
+              className="w-full h-full rounded-lg object-cover"
             />
-          </span>
-          <p className=" leading-[20px] md:leading-[21px] text-neutral-300 text-xs md:text-sm">
-            {profile.description}
-          </p>
-          <div className="flex flex-row gap-3 md:gap-5 text-xs md:text-sm mt-3">
-            <span className="flex flex-row gap-2 items-center">
-              <Twitter size={16} />
-              <p>{profile.xhandle}</p>
+          )}
+          <div
+            style={{
+              backgroundImage: `linear-gradient(to top, ${
+                profile.bg_color || "#1E40AF"
+              }CC, transparent)`,
+            }}
+            className="absolute rounded-xl bottom-0 bg-gradient-to-t md:p-3 p-2 h-[240px] md:h-[200px] w-[334px] text-white pr-3 gap-2 flex flex-col justify-center"
+          >
+            <span className="flex flex-row gap-3 items-center">
+              <h1 className="font-semibold text-lg capitalize">
+                {profile.name}
+              </h1>
+
+              <Image
+                src={check1}
+                alt=""
+                className="w-[25px] h-[25px] object-cover"
+              />
             </span>
-            <span className="flex flex-row gap-2 items-center">
-              <Linkedin size={16} />
-              <p>{profile.linkedin}</p>
-            </span>
+            <p className=" leading-[18px] md:leading-[21px] text-neutral-300 text-xs md:text-sm">
+              {profile.description}
+            </p>
+            <div className="flex flex-row gap-3 md:gap-5 text-xs md:text-sm mt-3">
+              <span className="flex flex-row gap-2 items-center">
+                <Twitter size={16} />
+
+                <p className="text-xs md:text-xs">
+                  {getXUsername(profile.xhandle)}
+                </p>
+              </span>
+              <span className="flex flex-row gap-2 items-center">
+                <Linkedin size={16} />
+
+                <p className="text-xs md:text-xs">
+                  {getLinkedInUsername(profile.linkedin)}
+                </p>
+              </span>
+            </div>
           </div>
+          {/* high profile developer with an eye for detail */}
         </div>
-        {/* high profile developer with an eye for detail */}
       </div>
+
+      <span className="flex flex-row gap-3">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={profile.xhandle}
+          className="w-[160px] flex items-center justify-center py-3 bg-blue-800 text-white rounded-xl text-sm  shadow-lg"
+        >
+          Visit Twitter
+        </a>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href={profile.linkedin}
+          className="w-[160px] flex items-center justify-center py-3 bg-[#ebebeb] text-black rounded-xl text-sm shadow-lg"
+        >
+          Visit LinkedIn
+        </a>
+      </span>
     </div>
   );
 }
