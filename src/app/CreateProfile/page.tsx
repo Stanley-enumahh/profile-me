@@ -132,13 +132,12 @@ export default function CreateProfile() {
   };
   return (
     <div className="flex justify-center w-full">
-      <div className="flex flex-col mb-[100px] w-[90%] md:w-[85%] h-fit mt-[40px] gap-6 items-center">
-        <h1 className="font-semibold text-lg md:text-2xl">
+      <div className="flex flex-col mb-[100px] w-[90%] md:w-[85%] h-fit mt-[60px] gap-6 items-center">
+        <h1 className="font-semibold text-neutral-200 text-lg md:text-2xl">
           Create your professional profile
         </h1>
         <div className="flex flex-col gap-14 md:flex-row justify-between w-full h-full">
-          <div className="flex flex-col w-full md:w-[50%] lg:w-[55%] h-full gap-3 px-4 py-7  rounded-xl bg-white">
-            <h2 className="text-[16px] md:text-lg">Fill in the your info.</h2>
+          <div className="flex flex-col w-full md:w-[50%] lg:w-[50%] h-full gap-3 px-5 py-7  rounded-xl bg-[#ebebeb]">
             <form
               onSubmit={handleSubmit((values) => mutation.mutate(values))}
               className="h-fit w-full flex flex-col gap-5"
@@ -310,7 +309,7 @@ export default function CreateProfile() {
           </div>
 
           {!isDirty ? (
-            <div className="h-[420px] md:h-[550px] w-full lg:w-[450px] shadow-lg rounded-lg flex justify-center items-center">
+            <div className="h-[420px] md:h-[550px] bg-[#ebebeb] w-full lg:w-[450px] shadow-lg rounded-lg flex justify-center items-center">
               <h3 className="font-semibold text-black/50 text-lg">
                 Preview will appear here
               </h3>

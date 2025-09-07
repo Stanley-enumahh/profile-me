@@ -1,13 +1,15 @@
 import { Testimonial } from "@/components/testimonials";
+import { TopNav } from "@/components/topNav";
 import Link from "next/link";
 
 const Home = () => {
   return (
-    <div className="flex  w-full h-fit justify-center">
-      <div className="w-[87%] md:w-[80%] h-fit flex flex-col gap-10 items-center">
+    <div className="flex w-full h-fit justify-center">
+      <TopNav />
+      <div className="w-[87%] md:w-[80%] h-fit flex flex-col gap-10 items-center ">
         {/* hero section */}
-        <div className="w-full flex h-[450px] flex-col gap-7 mt-[120px] items-center">
-          <h1 className="font-bold text-2xl text-white md:text-5xl text-center leading-[30px] md:leading-[48px]">
+        <div className="w-full flex h-[450px] flex-col gap-7 md:mt-[140px] mt-[120px] items-center">
+          <h1 className="font-bold text-2xl text-white md:text-5xl text-center leading-[30px] md:leading-[55px]">
             Launch your profile online in minutes <br /> no design or coding
             skills needed
           </h1>
@@ -27,7 +29,7 @@ const Home = () => {
 
             <Link
               href="/CreateProfile"
-              className=" text-white px-3 md:px-7 py-3 rounded-sm cursor-pointer bg-[#099137] hover:translate-1 transition-all duration-200 shadow-lg"
+              className=" text-white px-3 md:px-7 py-3 rounded-sm cursor-pointer bg-[#099137] transition-all duration-200 shadow-lg"
             >
               Explore templates
             </Link>

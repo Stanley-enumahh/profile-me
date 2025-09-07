@@ -21,7 +21,7 @@ export const TopNav = () => {
           className={`flex flex-col md:border-0 border-b shadow-xl md:shadow-none border-b-[#017BF6] md:static absolute md:flex-row text-neutral-200 transition-all duration-200 justify-center items-center text-sm gap-5 ${
             isOpen
               ? "top-[50px] right-0 h-[120px] w-full bg-[#001C37]"
-              : "top-[-100%] left-0 w-full"
+              : "top-[-100%] left-0 w-full justify-end"
           }`}
         >
           <Link
