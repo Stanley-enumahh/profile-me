@@ -50,7 +50,7 @@ const LivePreview = ({
             </span>
           )}
           {description && (
-            <p className="capitalize text-neutral-200 text-sm leading-[22px]">
+            <p className="capitalize text-neutral-200 text-sm leading-[19px] md:leading-[22px]">
               {description}
             </p>
           )}

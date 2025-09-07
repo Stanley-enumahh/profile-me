@@ -42,7 +42,7 @@ export default function ProfileClient({ id }: { id: string }) {
   if (isLoading)
     return (
       <div className="h-screen w-full flex justify-center items-center gap-4 flex-col">
-        <LoaderFive text=" Loading your profile..." />;
+        <LoaderFive text=" Loading your profile..." />
         <Skeleton className="h-[450px] w-[350px] rounded-lg" />
       </div>
     );
