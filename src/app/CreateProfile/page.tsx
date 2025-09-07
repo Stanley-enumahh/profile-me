@@ -46,11 +46,10 @@ export default function CreateProfile() {
     watch,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ProfileFormValues>();
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [copied, setCopied] = useState(false);
   const [url, setUrl] = useState<null | string>(null);
 
@@ -288,9 +287,9 @@ export default function CreateProfile() {
               <span className="flex flex-row w-full justify-center items-center gap-5">
                 {!url ? (
                   <button
-                    disabled={mutation.isPending}
+                    disabled={mutation.isPending || !isDirty}
                     type="submit"
-                    className="mt-2 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
+                    className="mt-2 disabled:bg-[#033238]/70 cursor-pointer bg-[#033238] text-xs md:text-sm px-6 py-2 rounded-xl text-white hover:bg-[#033238]/80 transition-all duration-200"
                   >
                     {mutation.isPending ? "Generating..." : "Generate Link"}
                   </button>
@@ -310,14 +309,22 @@ export default function CreateProfile() {
             </form>
           </div>
 
-          <LivePreview
-            image={previewImage || ""}
-            description={description}
-            xHandle={xHandle}
-            linkedIn={linkedIn}
-            name={name}
-            bgColor={watch("bgColor") || "#1446e6"}
-          />
+          {!isDirty ? (
+            <div className="h-[420px] md:h-[550px] w-full lg:w-[450px] shadow-lg rounded-lg flex justify-center items-center">
+              <h3 className="font-semibold text-black/50 text-lg">
+                Preview will appear here
+              </h3>
+            </div>
+          ) : (
+            <LivePreview
+              image={previewImage || ""}
+              description={description}
+              xHandle={xHandle}
+              linkedIn={linkedIn}
+              name={name}
+              bgColor={watch("bgColor") || "#1446e6"}
+            />
+          )}
         </div>
       </div>
     </div>

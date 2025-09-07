@@ -16,6 +16,7 @@ import { Skeleton } from "./ui/skeleton";
 import { getXUsername } from "@/lib/getXusername";
 import { getLinkedInUsername } from "@/lib/getIinkedInUsername";
 import { LoaderFive } from "./ui/loader";
+import Link from "next/link";
 
 async function fetchProfile(id: string) {
   const { data, error } = await supabase
@@ -48,13 +49,16 @@ export default function ProfileClient({ id }: { id: string }) {
   if (error) return <p>Something went wrong</p>;
 
   return (
-    <div className="w-full min-h-screen md:h-[700px] flex justify-center bg-gradient-to-t to-[#b061c5] from-[#41558c] items-center flex-col gap-8">
+    <div className="w-full h-screen flex md:flex-row justify-center bg-gradient-to-t to-[#b061c5] from-[#41558c] items-center flex-col gap-4 md:gap-8">
       <p
-        className={`md:text-sm text-xs ${dancingScript.className} text-white fixed top-[40px] md:top-[50%] md:left-[180px]`}
+        className={`md:text-sm flex flex-row items-center gap-1 text-sm ${dancingScript.className} text-white fixed top-[30px] md:top-[57%] md:right-[39%]`}
       >
-        Made with profile me
+        Made with
+        <Link href="/" className="underline">
+          profile me
+        </Link>
       </p>
-      <div className="bg-[#ebebeb] h-[80%] shadow-xl md:h-[460px] w-[87%] p-2  md:w-[350px] mt-[40px] md:mt-[60px] overflow-hidden relative rounded-xl">
+      <div className="bg-[#ebebeb] h-[500px] shadow-xl md:h-[460px] w-[90%] p-2  md:w-[350px] mt-[40px] overflow-hidden relative rounded-xl">
         <div className="h-full w-full overflow-hidden relative shadow-lg rounded-xl">
           {profile.image_url && (
             <img
@@ -69,7 +73,7 @@ export default function ProfileClient({ id }: { id: string }) {
                 profile.bg_color || "#1E40AF"
               }CC, transparent)`,
             }}
-            className="absolute rounded-xl bottom-0 bg-gradient-to-t md:p-3 p-2 h-[240px] md:h-[200px] w-[334px] text-white pr-3 gap-2 flex flex-col justify-center"
+            className="absolute rounded-xl bottom-0 bg-gradient-to-t md:p-3 p-2 h-[200px] md:h-[200px] w-[334px] text-white pr-3 gap-2 flex flex-col justify-center"
           >
             <span className="flex flex-row gap-3 items-center">
               <h1 className="font-semibold text-lg capitalize">
@@ -82,7 +86,7 @@ export default function ProfileClient({ id }: { id: string }) {
                 className="w-[25px] h-[25px] object-cover"
               />
             </span>
-            <p className=" leading-[18px] md:leading-[21px] text-neutral-300 text-xs md:text-sm">
+            <p className="leading-[18px] md:leading-[21px] text-neutral-200 text-xs md:text-sm">
               {profile.description}
             </p>
             <div className="flex flex-row gap-3 md:gap-5 text-xs md:text-sm mt-3">
@@ -111,7 +115,7 @@ export default function ProfileClient({ id }: { id: string }) {
           target="_blank"
           rel="noopener noreferrer"
           href={profile.xhandle}
-          className="w-[160px] flex items-center justify-center py-3 bg-blue-800 text-white rounded-xl text-sm  shadow-lg"
+          className="w-[140px] flex items-center justify-center py-3 bg-blue-800 text-white rounded-xl text-xs md:text-sm shadow-lg"
         >
           Visit Twitter
         </a>
@@ -119,7 +123,7 @@ export default function ProfileClient({ id }: { id: string }) {
           target="_blank"
           rel="noopener noreferrer"
           href={profile.linkedin}
-          className="w-[160px] flex items-center justify-center py-3 bg-[#ebebeb] text-black rounded-xl text-sm shadow-lg"
+          className="w-[140px] flex items-center justify-center py-3 bg-[#ebebeb] text-black rounded-xl text-xs md:text-sm shadow-lg"
         >
           Visit LinkedIn
         </a>
