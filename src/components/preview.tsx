@@ -21,8 +21,8 @@ const LivePreview = ({
 }) => {
   return (
     <div className="w-full justify-center items-center md:w-[50%] lg:w-[48%] h-fit flex gap-3 flex-col">
-      <h2 className="text-lg">Live preview</h2>
-      <div className="h-[420px] md:h-[550px] w-full lg:w-[95%] overflow-hidden relative shadow-lg rounded-lg">
+      <h2 className="text-lg text-neutral-200">Live preview</h2>
+      <div className="h-[500px] md:h-[550px] w-full lg:w-[95%] overflow-hidden relative shadow-lg rounded-lg">
         {image && (
           <img
             src={image}
@@ -73,7 +73,7 @@ const LivePreview = ({
             )}
           </div>
         </div>
-        {/* high profile designer with an eye for detail, i help start ups rech goals on time 
+        {/* high profile designer with an eye for detail, i help start ups rech goals on time, within budget and with high quality 
         
         https://x.com/stanlee0nX
         

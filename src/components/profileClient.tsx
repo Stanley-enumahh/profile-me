@@ -58,7 +58,7 @@ export default function ProfileClient({ id }: { id: string }) {
           profile me
         </Link>
       </p>
-      <div className="bg-[#ebebeb] h-[500px] shadow-xl md:h-[460px] w-[90%] p-2  md:w-[350px] mt-[40px] overflow-hidden relative rounded-xl">
+      <div className="bg-[#ebebeb] h-[450px] shadow-xl md:h-[460px] w-[90%] p-2  md:w-[350px] mt-[40px] overflow-hidden relative rounded-xl">
         <div className="h-full w-full overflow-hidden relative shadow-lg rounded-xl">
           {profile.image_url && (
             <img

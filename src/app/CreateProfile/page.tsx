@@ -123,13 +123,28 @@ export default function CreateProfile() {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPreviewImage(URL.createObjectURL(file));
-      setValue("image", e.target.files as FileList);
+  const handleShare = async () => {
+    if (!url) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check out my profile",
+          text: "Here’s my professional profile page:",
+          url,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      // fallback for desktop browsers without Web Share API
+      await navigator.clipboard.writeText(url);
+      toast.success(
+        "Link copied to clipboard (sharing not supported on this device)"
+      );
     }
   };
+
   return (
     <div className="flex justify-center w-full">
       <div className="flex flex-col mb-[100px] w-[90%] md:w-[85%] h-fit mt-[60px] gap-6 items-center">
@@ -267,8 +282,8 @@ export default function CreateProfile() {
               {/* displayed url */}
               {url && (
                 <div className="flex flex-row justify-between items-center bg-blue-200 h-[60px] py-2 px-2 rounded-lg">
-                  <span className="border-r flex justify-between items-center px-5 h-full border-gray-400">
-                    <Link className="text-black/50" />
+                  <span className="border-r hidden md:flex justify-between items-center px-5 h-full border-gray-400">
+                    <Link className="text-black/50" size={16} />
                   </span>
 
                   <p className="text-sm text-black/60">{truncateUrl(url)}</p>
@@ -279,7 +294,16 @@ export default function CreateProfile() {
                     disabled={!url || copied}
                     className="cursor-pointer disabled:bg-blue-700/50 bg-blue-700 text-xs md:text-sm h-full px-4 rounded-lg text-white hover:bg-blue-700/80 transition-all duration-200"
                   >
-                    Copy Link
+                    Copy
+                  </button>
+
+                  <button
+                    onClick={handleShare}
+                    type="button"
+                    disabled={!url}
+                    className="cursor-pointer bg-green-600 text-xs md:text-sm h-full px-4 rounded-lg text-white hover:bg-green-700 transition-all duration-200"
+                  >
+                    Share
                   </button>
                 </div>
               )}
