@@ -4,6 +4,15 @@ import { getXUsername } from "@/lib/getXusername";
 import { Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 
+type previewType = {
+  image: string;
+  description: string;
+  xHandle: string;
+  linkedIn: string;
+  name: string;
+  bgColor: string;
+};
+
 const LivePreview = ({
   image,
   description,
@@ -11,14 +20,7 @@ const LivePreview = ({
   linkedIn,
   name,
   bgColor,
-}: {
-  image: string;
-  description: string;
-  xHandle: string;
-  linkedIn: string;
-  name: string;
-  bgColor: string;
-}) => {
+}: previewType) => {
   return (
     <div className="w-full justify-center items-center md:w-[50%] lg:w-[48%] h-fit flex gap-3 flex-col">
       <h2 className="text-lg text-neutral-200">Live preview</h2>

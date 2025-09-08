@@ -49,7 +49,7 @@ export default function ProfileClient({ id }: { id: string }) {
   if (error) return <p>Something went wrong</p>;
 
   return (
-    <div className="w-full h-screen flex md:flex-row justify-center bg-gradient-to-t to-[#b061c5] from-[#41558c] items-center flex-col gap-4 md:gap-8">
+    <div className="w-full h-screen flex md:flex-row justify-center bg-gradient-to-t to-[#b061c5] from-[#001C37] items-center flex-col gap-4 md:gap-8">
       <p
         className={`md:text-sm flex flex-row items-center gap-1 text-sm ${dancingScript.className} text-white fixed top-[30px] md:top-[57%] md:right-[39%]`}
       >

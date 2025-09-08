@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-scroll";
+import Hlink from "next/link";
 
 export const TopNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +12,14 @@ export const TopNav = () => {
     setIsOpen((c) => !c);
   };
   return (
-    <div className="w-full fixed top-0 md:h-fit flex justify-center items-center gap-4 backdrop-blur-2xl">
+    <div className="w-full fixed z-30 top-0 md:h-fit flex justify-center items-center gap-4 backdrop-blur-2xl">
       <div className="w-[90%] md:w-[80%] flex gap-5 flex-row items-center justify-between py-4">
-        <h1 className="font-bold text-lg md:text-2xl text-[#017BF6] z-30">
+        <Hlink
+          href="/"
+          className="font-bold cursor-pointer text-lg md:text-2xl text-[#017BF6] z-40"
+        >
           Profly
-        </h1>
+        </Hlink>
 
         <ul
           className={`flex flex-col md:border-0 border-b shadow-xl md:shadow-none border-b-[#017BF6] md:static absolute md:flex-row text-neutral-200 transition-all duration-200 justify-center items-center text-sm gap-5 ${
